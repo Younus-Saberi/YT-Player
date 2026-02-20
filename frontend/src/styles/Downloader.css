@@ -1,0 +1,120 @@
+.downloader-container {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.downloader-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--dark-text);
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.downloader-subtitle {
+  color: var(--medium-text);
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 1.05rem;
+}
+
+.downloader-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.quality-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+}
+
+.quality-radio {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+}
+
+.quality-radio input {
+  cursor: pointer;
+  accent-color: var(--primary-color);
+}
+
+.quality-radio span {
+  padding: 0.75rem;
+  border: 2px solid var(--light-border);
+  border-radius: var(--radius-md);
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  text-align: center;
+  width: 100%;
+}
+
+.quality-radio input:checked + span,
+.quality-radio span.selected {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-color: var(--primary-color);
+}
+
+.quality-radio input:disabled + span {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.info-box {
+  background: #f0f4ff;
+  border: 1px solid #d1d5ff;
+  border-radius: var(--radius-lg);
+  padding: 1.5rem;
+  margin-top: 2rem;
+}
+
+.info-box h4 {
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+  font-size: 1.05rem;
+}
+
+.info-box ol {
+  margin-left: 1.25rem;
+  color: var(--dark-text);
+  line-height: 1.8;
+}
+
+.info-box li {
+  margin-bottom: 0.5rem;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .quality-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .downloader-title {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .downloader-container {
+    margin: 0;
+  }
+
+  .quality-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .quality-radio span {
+    padding: 0.5rem;
+  }
+
+  .info-box {
+    padding: 1rem;
+  }
+}

@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: yt-to-mp3-backend
+    ports:
+      - "5000:5000"
+    environment:
+      FLASK_ENV: production
+      FLASK_PORT: 5000
+      SECRET_KEY: ${SECRET_KEY:-change-me-in-production}
+      ALLOWED_ORIGIN: http://localhost:3000
+    volumes:
+      - ./backend/uploads:/app/uploads
+      - ./backend/instance:/app/instance
+    restart: unless-stopped
+    networks:
+      - yt-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: yt-to-mp3-frontend
+    ports:
+      - "3000:80"
+    environment:
+      REACT_APP_API_URL: http://localhost:5000/api
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - yt-network
+
+networks:
+  yt-network:
+    driver: bridge
+
+volumes:
+  uploads:
+  instance:

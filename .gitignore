@@ -1,0 +1,48 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+.npm
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Environment
+.env
+.env.local
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Build
+dist/
+build/
+*.egg-info/
+
+# Logs
+*.log
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Cache
+.cache/
+.pytest_cache/
