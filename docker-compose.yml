@@ -7,9 +7,9 @@ services:
       dockerfile: Dockerfile
     container_name: yt-to-mp3-backend
     ports:
-      - "5000:5000"
+      - "10000:10000"
     environment:
-      - PORT=5000
+      - PORT=10000
       - NODE_ENV=production
       - SECRET_KEY=${SECRET_KEY:-change-me-in-production}
       - CORS_ORIGINS=http://localhost:3000,https://your-domain.com
@@ -18,7 +18,7 @@ services:
       - instance:/app/instance
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/api/health')"]
+      test: ["CMD", "curl", "-f", "http://localhost:10000/api/health"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -34,7 +34,7 @@ services:
     ports:
       - "3000:80"
     environment:
-      - REACT_APP_API_URL=http://localhost:5000/api
+      - REACT_APP_API_URL=http://localhost:10000/api
     depends_on:
       backend:
         condition: service_healthy

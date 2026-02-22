@@ -17,9 +17,8 @@ BASE_DIR = Path(__file__).parent
 
 app = Flask(__name__)
 
-# CORS Configuration
-cors_origins = config.CORS_ORIGINS if isinstance(config.CORS_ORIGINS, list) else [config.CORS_ORIGINS]
-CORS(app, origins=cors_origins, supports_credentials=True)
+# CORS Configuration - Allow all origins globally
+CORS(app, resources={r"/api/*": {"origins": "*"}}, supports_credentials=True)
 
 # JSON configuration
 app.config['JSON_SORT_KEYS'] = False

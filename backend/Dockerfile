@@ -25,14 +25,14 @@ RUN mkdir -p uploads instance
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
 ENV FLASK_APP=app.py
-ENV PORT=5000
+ENV PORT=10000
 
 # Expose port
-EXPOSE 5000
+EXPOSE 10000
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
-    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:5000/api/health')" || exit 1
+    CMD curl -f http://localhost:10000/api/health || exit 1
 
-# Start the Flask application
-CMD ["python", "app.py"]
+# Start with gunicorn
+CMD ["gunicorn", "-b", "0.0.0.0:10000", "app:app"]

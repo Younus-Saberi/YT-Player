@@ -1,4 +1,4 @@
-# Flask - Web framework
+nf# Flask - Web framework
 Flask==3.0.0
 Flask-CORS==4.0.0
 
@@ -8,5 +8,5 @@ python-dotenv==1.0.0
 # Additional utilities
 Werkzeug==3.0.1
 
-# Optional: For production server
-# Gunicorn==21.2.0
+# Production server
+Gunicorn==21.2.0
