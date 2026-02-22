@@ -24,7 +24,7 @@ class YouTubeService:
     @staticmethod
     def validate_url(url):
         """Validate if the URL is a valid YouTube URL."""
-        youtube_regex = r'^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/'
+        youtube_regex = r'^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.*'
         return re.match(youtube_regex, url) is not None
 
     @staticmethod
@@ -53,6 +53,8 @@ class YouTubeService:
                     'Windows: Download from https://github.com/yt-dlp/yt-dlp/releases'
                 )
 
+            print(f'[YT-DLP] Running command for URL: {url}')
+            
             # Get video info in JSON format
             result = subprocess.run([
                 'yt-dlp',
@@ -60,12 +62,19 @@ class YouTubeService:
                 '--no-warnings',
                 '-q',
                 url
-            ], capture_output=True, text=True, timeout=30)
+            ], capture_output=True, text=True, timeout=60)
 
+            print(f'[YT-DLP] Return code: {result.returncode}')
+            print(f'[YT-DLP] STDERR: {result.stderr}')
+            print(f'[YT-DLP] STDOUT length: {len(result.stdout)}')
+            
             if result.returncode != 0:
                 if 'ERROR' in result.stderr:
                     raise YouTubeDownloadError(f'Video not found or unavailable: {result.stderr}')
                 raise YouTubeDownloadError(f'Error fetching video info: {result.stderr}')
+
+            if not result.stdout.strip():
+                raise YouTubeDownloadError('No output from yt-dlp - possible network issue')
 
             info = json.loads(result.stdout)
 
@@ -100,16 +109,14 @@ class YouTubeService:
             output_template = os.path.join(self.output_path, safe_title)
 
             # Download audio and convert to MP3 using yt-dlp
+            # Use bestaudio quality selector without specifying format
             result = subprocess.run([
                 'yt-dlp',
                 url,
-                '-f', 'bestaudio/best',
-                '-x',                           # Extract audio
-                '--audio-format', 'mp3',        # Convert to mp3
-                '--audio-quality', quality,     # Audio quality
+                '-x',
+                '--audio-format', 'mp3',
                 '-o', output_template + '.%(ext)s',
                 '--quiet',
-                '--no-warnings',
             ], capture_output=True, text=True, timeout=600)
 
             if result.returncode != 0:

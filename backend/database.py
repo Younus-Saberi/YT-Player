@@ -16,7 +16,7 @@ def init_db():
     """Initialize the database and create tables if they don't exist."""
     global db_connection
     try:
-        db_connection = sqlite3.connect(DB_PATH)
+        db_connection = sqlite3.connect(DB_PATH, check_same_thread=False)
         db_connection.row_factory = sqlite3.Row
 
         cursor = db_connection.cursor()

@@ -51,32 +51,44 @@ def process_download(download_id, url, quality):
 def create_download():
     """POST /api/download - Create a new download."""
     try:
+        print('[DOWNLOAD] Request received')
         data = request.get_json()
+        print(f'[DOWNLOAD] Request data: {data}')
+        
         url = data.get('url', '').strip() if data else ''
         quality = data.get('quality', config.DEFAULT_QUALITY) if data else config.DEFAULT_QUALITY
+        
+        print(f'[DOWNLOAD] URL: {url}, Quality: {quality}')
 
         # Validation
         if not url:
+            print('[DOWNLOAD] FAIL: URL is required')
             return jsonify({
                 'success': False,
                 'message': 'YouTube URL is required',
             }), 400
 
         if len(url) > 500:
+            print('[DOWNLOAD] FAIL: URL too long')
             return jsonify({
                 'success': False,
                 'message': 'URL is too long',
             }), 400
 
         # Validate quality
+        print(f'[DOWNLOAD] Allowed qualities: {config.ALLOWED_QUALITIES}')
         if quality not in config.ALLOWED_QUALITIES:
+            print(f'[DOWNLOAD] FAIL: Invalid quality {quality}')
             return jsonify({
                 'success': False,
                 'message': f'Invalid quality. Allowed: {", ".join(config.ALLOWED_QUALITIES)}',
             }), 400
 
         # Validate YouTube URL
-        if not youtube_service.validate_url(url):
+        url_valid = youtube_service.validate_url(url)
+        print(f'[DOWNLOAD] URL valid: {url_valid}')
+        if not url_valid:
+            print('[DOWNLOAD] FAIL: Invalid YouTube URL')
             return jsonify({
                 'success': False,
                 'message': 'Invalid YouTube URL',
@@ -84,8 +96,11 @@ def create_download():
 
         # Get video info
         try:
+            print('[DOWNLOAD] Fetching video info...')
             video_info = youtube_service.get_video_info(url)
+            print(f'[DOWNLOAD] Video info: {video_info}')
         except YouTubeDownloadError as error:
+            print(f'[DOWNLOAD] FAIL: Video info error: {error}')
             return jsonify({
                 'success': False,
                 'message': str(error),
