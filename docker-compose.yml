@@ -9,14 +9,20 @@ services:
     ports:
       - "5000:5000"
     environment:
-      FLASK_ENV: production
-      FLASK_PORT: 5000
-      SECRET_KEY: ${SECRET_KEY:-change-me-in-production}
-      ALLOWED_ORIGIN: http://localhost:3000
+      - PORT=5000
+      - NODE_ENV=production
+      - SECRET_KEY=${SECRET_KEY:-change-me-in-production}
+      - CORS_ORIGINS=http://localhost:3000,https://your-domain.com
     volumes:
-      - ./backend/uploads:/app/uploads
-      - ./backend/instance:/app/instance
+      - uploads:/app/uploads
+      - instance:/app/instance
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:5000/api/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
     networks:
       - yt-network
 
@@ -28,9 +34,10 @@ services:
     ports:
       - "3000:80"
     environment:
-      REACT_APP_API_URL: http://localhost:5000/api
+      - REACT_APP_API_URL=http://localhost:5000/api
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
     restart: unless-stopped
     networks:
       - yt-network
